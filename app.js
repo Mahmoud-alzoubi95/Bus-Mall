@@ -7,16 +7,22 @@ let displaybutton = document.getElementById('button');
 let leftImageElement = document.getElementById('leftImage');
 let middleImageElement = document.getElementById('middleImg');
 let rightImageElement = document.getElementById('rightImage');
-
-
+let nameofObjects=[];
+let arrayofnumOfclicks = [];
 let arrOfObjects = [];
+let arrOfseens = [];
+let numOfclicks =0 ;
+let seens = 0 ;
+let arrofrepeatedimg = [];
 
 function BusMall(name, source){
+    
     this.name = name;
     this.source = source;
     this.numOfclicks = 0;
     this.seens = 0;
     arrOfObjects.push(this);
+    nameofObjects.push(this.name)
 }
 
 
@@ -46,37 +52,85 @@ new BusMall('wine-glass','img/wine-glass.jpg');
 let leftImageIndex;
 let middleImageIndex;
 let rightImageIndex;
-function renderTwoRandomImages(){
+function renderThreeRandomImages(){
     leftImageIndex = generateRandomIndex(); 
     rightImageIndex = generateRandomIndex(); 
     middleImageIndex =  generateRandomIndex();  
 
-    
+
+    while(arrofrepeatedimg.includes(rightImageIndex,)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(leftImageIndex,2)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(middleImageIndex,2)===arrOfObjects[middleImageIndex] ) {
+        rightImageIndex = generateRandomIndex();
+        leftImageIndex = generateRandomIndex();
+        middleImageIndex = generateRandomIndex();
+    }
+
+    // while(arrofrepeatedimg.includes(1)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(1)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(1)===arrOfObjects[middleImageIndex] ) {
+    //     rightImageIndex = generateRandomIndex();
+    //     leftImageIndex = generateRandomIndex();
+    //     middleImageIndex = generateRandomIndex();
+    // }
+
+    // while(arrofrepeatedimg.includes(2)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(2)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(2)===arrOfObjects[middleImageIndex] ) {
+    //     rightImageIndex = generateRandomIndex();
+    //     leftImageIndex = generateRandomIndex();
+    //     middleImageIndex = generateRandomIndex();
+    // }
+
     while(leftImageIndex === rightImageIndex || leftImageIndex === middleImageIndex || middleImageIndex===rightImageIndex){
         leftImageIndex = generateRandomIndex(); 
         middleImageIndex =  generateRandomIndex();  
 
     }
 
-    arrOfObjects[rightImageIndex].seens++ ;
-    
-    arrOfObjects[leftImageIndex].seens++ ;
+   
 
+    arrOfObjects[rightImageIndex].seens++ ;
+    arrOfObjects[leftImageIndex].seens++ ;
     arrOfObjects[middleImageIndex].seens++ ;
+
+    
                                          
     leftImageElement.setAttribute('src', arrOfObjects[leftImageIndex].source); 
     middleImageElement.setAttribute('src', arrOfObjects[middleImageIndex].source);
     rightImageElement.setAttribute('src', arrOfObjects[rightImageIndex].source);
 
-                                              
+    console.log(leftImageIndex, middleImageIndex, rightImageIndex);
+             
+    for(let i=0 ; i<arrOfObjects.length ; i++){
+        arrofrepeatedimg.push(arrOfObjects[rightImageIndex])
+        arrofrepeatedimg.push(arrOfObjects[leftImageElement])
+        arrofrepeatedimg.push(arrOfObjects[middleImageElement])
+        }
+
 }
 
 
-renderTwoRandomImages();
 
+renderThreeRandomImages();
+
+
+
+// function repeatimg() {
+
+// for (let i=0 ; i<3 ;i++){
+
+//     while(arrofrepeatedimg.includes(i)===arrOfObjects[rightImageIndex].source){
+//         rightImageIndex = generateRandomIndex();
+//     }
+
+//  while(arrofrepeatedimg.includes(i)===arrOfObjects[leftImageIndex].source){
+   
+//     }
+
+//     while(arrofrepeatedimg.includes(i)===arrOfObjects[middleImageIndex].source){
+//         }
+    
+
+// }
+
+// }
 
 function generateRandomIndex(){
-
 
      let randomIndex = Math.floor(Math.random() * arrOfObjects.length); 
      return randomIndex;
@@ -108,9 +162,19 @@ function handleClicking(event){
             arrOfObjects[middleImageIndex].numOfclicks++;
            
         }
+       
+        for (let i=0 ; i < arrOfObjects.length ;i++){
+            // console.log(arrOfObjects[i]);
 
-        renderTwoRandomImages();
-        console.log(arrOfObjects);
+            arrayofnumOfclicks.push(arrOfObjects[i].numOfclicks)
+            arrOfseens.push(arrOfObjects[i].seens)
+
+        }  
+
+        datachart() ;
+
+        renderThreeRandomImages();
+        // console.log(arrOfObjects);
     }
     else{
 
@@ -119,12 +183,15 @@ function handleClicking(event){
         rightImageElement.removeEventListener('click', handleClicking);  
     }
 
+  
 }
+
 
 
 let button = document.getElementById('button');
 button.addEventListener('submit', displaylist)
 
+datachart() ;
 
 function displaylist (event) {
 
@@ -137,9 +204,37 @@ if(Round >= 25){
         unorderdList.appendChild(li);
         li.textContent = ` ${arrOfObjects[i].name} had ${arrOfObjects[i].numOfclicks} Votes and was seen ${arrOfObjects[i].seens} times..`
 
-        button.removeEventListener('click', displaylist);  
-
+        button.removeEventListener('click', displaylist); 
+}
+}
 }
 
-    }
+
+function datachart(){
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bar',
+    
+        // The data for our dataset
+        data: {
+            labels: nameofObjects,
+            datasets: [{
+                label: 'products data',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: arrayofnumOfclicks,
+            },
+            {
+                label: 'products data',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: arrOfseens,
+            }]
+        },
+    
+        // Configuration options go here
+        options: {}
+    });
+   
 }
