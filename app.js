@@ -23,6 +23,8 @@ function BusMall(name, source){
     this.seens = 0;
     arrOfObjects.push(this);
     nameofObjects.push(this.name)
+
+
 }
 
 
@@ -57,29 +59,34 @@ function renderThreeRandomImages(){
     rightImageIndex = generateRandomIndex(); 
     middleImageIndex =  generateRandomIndex();  
 
+    for(let i=0 ; i<arrOfObjects.length ; i++){
+        arrofrepeatedimg.push(arrOfObjects[rightImageIndex])
+        arrofrepeatedimg.push(arrOfObjects[leftImageElement])
+        arrofrepeatedimg.push(arrOfObjects[middleImageElement])
+        }
 
-    while(arrofrepeatedimg.includes(rightImageIndex,)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(leftImageIndex,2)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(middleImageIndex,2)===arrOfObjects[middleImageIndex] ) {
+
+    while(arrofrepeatedimg.includes(rightImageIndex)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(leftImageIndex,2)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(middleImageIndex,2)===arrOfObjects[middleImageIndex] ) {
         rightImageIndex = generateRandomIndex();
         leftImageIndex = generateRandomIndex();
         middleImageIndex = generateRandomIndex();
     }
 
-    // while(arrofrepeatedimg.includes(1)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(1)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(1)===arrOfObjects[middleImageIndex] ) {
-    //     rightImageIndex = generateRandomIndex();
-    //     leftImageIndex = generateRandomIndex();
-    //     middleImageIndex = generateRandomIndex();
-    // }
+    while(arrofrepeatedimg.includes(leftImageElement)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(leftImageElement)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(leftImageElement)===arrOfObjects[middleImageIndex] ) {
+        rightImageIndex = generateRandomIndex();
+        leftImageIndex = generateRandomIndex();
+        middleImageIndex = generateRandomIndex();
+    }
 
-    // while(arrofrepeatedimg.includes(2)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(2)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(2)===arrOfObjects[middleImageIndex] ) {
-    //     rightImageIndex = generateRandomIndex();
-    //     leftImageIndex = generateRandomIndex();
-    //     middleImageIndex = generateRandomIndex();
-    // }
+    while(arrofrepeatedimg.includes(middleImageElement)===arrOfObjects[rightImageIndex] || arrofrepeatedimg.includes(middleImageElement)===arrOfObjects[leftImageIndex] || arrofrepeatedimg.includes(middleImageElement)===arrOfObjects[middleImageIndex] ) {
+        rightImageIndex = generateRandomIndex();
+        leftImageIndex = generateRandomIndex();
+        middleImageIndex = generateRandomIndex();
+    }
 
     while(leftImageIndex === rightImageIndex || leftImageIndex === middleImageIndex || middleImageIndex===rightImageIndex){
         leftImageIndex = generateRandomIndex(); 
         middleImageIndex =  generateRandomIndex();  
-
     }
 
    
@@ -96,12 +103,7 @@ function renderThreeRandomImages(){
 
     console.log(leftImageIndex, middleImageIndex, rightImageIndex);
              
-    for(let i=0 ; i<arrOfObjects.length ; i++){
-        arrofrepeatedimg.push(arrOfObjects[rightImageIndex])
-        arrofrepeatedimg.push(arrOfObjects[leftImageElement])
-        arrofrepeatedimg.push(arrOfObjects[middleImageElement])
-        }
-
+  
 }
 
 
@@ -109,26 +111,6 @@ function renderThreeRandomImages(){
 renderThreeRandomImages();
 
 
-
-// function repeatimg() {
-
-// for (let i=0 ; i<3 ;i++){
-
-//     while(arrofrepeatedimg.includes(i)===arrOfObjects[rightImageIndex].source){
-//         rightImageIndex = generateRandomIndex();
-//     }
-
-//  while(arrofrepeatedimg.includes(i)===arrOfObjects[leftImageIndex].source){
-   
-//     }
-
-//     while(arrofrepeatedimg.includes(i)===arrOfObjects[middleImageIndex].source){
-//         }
-    
-
-// }
-
-// }
 
 function generateRandomIndex(){
 
@@ -178,6 +160,8 @@ function handleClicking(event){
     }
     else{
 
+        savenumOfclicks() 
+
         leftImageElement.removeEventListener('click', handleClicking);
         middleImageElement.removeEventListener('click', handleClicking);  
         rightImageElement.removeEventListener('click', handleClicking);  
@@ -186,17 +170,42 @@ function handleClicking(event){
   
 }
 
+function savenumOfclicks(){
+    // for(let i = 0 ; i < arrOfObjects.length; i++){
+    let vote =JSON.stringify(arrOfObjects);
+    localStorage.setItem('allVotes', vote) ;
+    // console.log(votesright);
+    // }
+}
+
+
+function previuosvotes(){
+   let prevVotes=localStorage.getItem('allVotes');
+   let convprevVotes =JSON.parse(prevVotes)
+
+   if(convprevVotes){ // its not null truthy 
+    // console.log(list);
+    arrOfObjects = convprevVotes;
+  }
+
+
+  renderThreeRandomImages();
+  
+//   datachart() ;
+
+}
+
+
+
 
 
 let button = document.getElementById('button');
 button.addEventListener('submit', displaylist)
 
-datachart() ;
 
 function displaylist (event) {
 
 if(Round >= 25){
-
     let unorderdList = document.getElementById('report');
     let li;
     for(let i = 0 ; i < arrOfObjects.length; i++){
@@ -205,6 +214,18 @@ if(Round >= 25){
         li.textContent = ` ${arrOfObjects[i].name} had ${arrOfObjects[i].numOfclicks} Votes and was seen ${arrOfObjects[i].seens} times..`
 
         button.removeEventListener('click', displaylist); 
+
+      
+}
+}
+else {
+    previuosvotes() 
+    let unorderdList = document.getElementById('report');
+    let li;
+    for(let i = 0 ; i < arrOfObjects.length; i++){
+        li = document.createElement('li');
+        unorderdList.appendChild(li);
+        li.textContent = ` ${arrOfObjects[i].name} had ${arrOfObjects[i].numOfclicks} Votes`
 }
 }
 }
@@ -223,7 +244,7 @@ function datachart(){
                 label: 'products data',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: arrayofnumOfclicks,
+                data: arrOfObjects.numOfclicks,
             },
             {
                 label: 'products data',
@@ -236,5 +257,4 @@ function datachart(){
         // Configuration options go here
         options: {}
     });
-   
 }
