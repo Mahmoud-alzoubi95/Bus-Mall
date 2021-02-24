@@ -118,14 +118,10 @@ function generateRandomIndex(){
      return randomIndex;
 }
 
-
 displaybutton.addEventListener('click',displaylist)
 leftImageElement.addEventListener('click', handleClicking);
 rightImageElement.addEventListener('click', handleClicking);
 middleImageElement.addEventListener('click', handleClicking);
-
-
-
 
 function handleClicking(event){
     Round++;
